@@ -17,7 +17,6 @@ jest.mock("../app/store", () => mockStore);
 describe("Given I am connected as an employee", () => {
   describe("When I am on NewBill Page", () => {
     test("Then bill icon in vertical layout should be highlighted", async () => {
-
       Object.defineProperty(window, 'localStorage', { value: localStorageMock })
       window.localStorage.setItem('user', JSON.stringify({
         type: 'Employee'
@@ -50,30 +49,84 @@ describe("Given I am connected as an employee", () => {
       fireEvent.submit(form)
       expect(handleSubmit).toHaveBeenCalled()
     })
-    test("Then, the file name should be correctly displayed into the input and isImgFormatValid should be true", () => {
-      document.body.innerHTML = NewBillUI()
-      window.localStorage.setItem("user", JSON.stringify({
-        type: "Employee",
-      }))
-      const store = mockStore
-      const onNavigate = jest.fn()
-      const newBill = new NewBill({document, onNavigate, store, localStorage: window.localStorage})
-      //Setup file input handling
-      const file = screen.getByTestId("file")
-      const handleChangeFile = jest.fn(newBill.handleChangeFile)
-      file.addEventListener("change", handleChangeFile)
-    
-      //Create file and event
-      const testFile = new File(['image'], 'file.png', { type: 'image/png' })
-    
-      //Trigger change event
-      fireEvent.change(file, {
-        target: {
-          files: [testFile]
-        }
-      })
-      expect(handleChangeFile).toHaveBeenCalled()
+  })
+})
+
+describe("When I am on NewBill Page", () => {
+  beforeEach(() => {
+    document.body.innerHTML = NewBillUI()
+    window.localStorage.setItem('user', JSON.stringify({ type: 'Employee' }))
+    window.alert = jest.fn()
+  })
+
+  test("Then, the handleChangeFile is called", () => {
+    const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname });
+      };
+    const store = mockStore
+    const newBill = new NewBill({document, onNavigate, store, localStorage: window.localStorage})
+
+    const file = screen.getByTestId('file')
+    const handleChangeFile = jest.fn(newBill.handleChangeFile)
+    file.addEventListener('change', handleChangeFile)
+    fireEvent.change(file)
+    expect(handleChangeFile).toHaveBeenCalled()
+  })
+
+  test("Then, the valid file upload should work", () => {
+    const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname });
+      };
+    const store = mockStore
+    const newBill = new NewBill({
+      document,
+      onNavigate,
+      store,
+      localStorage: window.localStorage
     })
+
+    const file = screen.getByTestId('file')
+    const handleChangeFile = jest.fn(newBill.handleChangeFile)
+    file.addEventListener('change', handleChangeFile)
+
+    const testFile = new File(['test'], 'test.png', { type: 'image/png' })
+    Object.defineProperty(file, 'files', {value: [testFile]})
+    Object.defineProperty(file, 'value', {value: 'fakepath-test.png'})
+    
+    fireEvent.change(file)
+
+    expect(handleChangeFile).toHaveBeenCalled()
+    expect(file.files[0].name).toBe('test.png')
+    expect(file.value).toBe('fakepath-test.png')
+    expect(file.files[0].type).toBe('image/png')
+    expect(window.alert).not.toHaveBeenCalled()
+  })
+
+  test("Then, the invalid file upload should not work", () => {
+    const onNavigate = jest.fn()
+    const store = mockStore
+    const newBill = new NewBill({
+      document,
+      onNavigate,
+      store,
+      localStorage: window.localStorage
+    })
+
+    const file = screen.getByTestId('file')
+    const handleChangeFile = jest.fn(newBill.handleChangeFile)
+    file.addEventListener('change', handleChangeFile)
+
+    const testFile = new File(['test'], 'test.txt', { type: 'text/plain' })
+    Object.defineProperty(file, 'files', {value: [testFile]})
+    Object.defineProperty(file, 'value', {value: 'fakepath-test.txt'})
+    
+    fireEvent.change(file)
+
+    expect(handleChangeFile).toHaveBeenCalled()
+    expect(file.files[0].name).toBe('test.txt')
+    expect(file.value).toBe('fakepath-test.txt')
+    expect(file.files[0].type).toBe('text/plain')
+    expect(window.alert).toHaveBeenCalledWith('Le format du fichier n\'est pas valide. Les formats acceptés sont jpg, jpeg et png.')
   })
 })
 
