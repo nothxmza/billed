@@ -103,7 +103,9 @@ describe("When I am on NewBill Page", () => {
   })
 
   test("Then, the invalid file upload should not work", () => {
-    const onNavigate = jest.fn()
+    const onNavigate = (pathname) => {
+      document.body.innerHTML = ROUTES({ pathname });
+    };
     const store = mockStore
     const newBill = new NewBill({
       document,
@@ -151,7 +153,7 @@ describe("Given I am a user connected as Employee", () => {
         "pct": 20
       }
 
-      const postBill = await mockStore.bills().update(bill)
+      const postBill = await mockStore.bills().create(bill)
       expect(postSpy).toHaveBeenCalledTimes(1)
       expect(postBill).toBeTruthy()
     })
