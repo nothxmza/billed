@@ -17,7 +17,6 @@ export default class NewBill {
   }
   handleChangeFile = e => {
     e.preventDefault()
-    //uttiliser la propriété files de l'input
     const file = this.document.querySelector(`input[data-testid="file"]`)
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length-1]
@@ -25,7 +24,7 @@ export default class NewBill {
     const validExtensions = ['jpg', 'jpeg', 'png']
     const formData = new FormData()
     const email = JSON.parse(localStorage.getItem("user")).email
-    console.log(file)
+    // check if the file extension is valid
     if (!validExtensions.includes(extension)) {
       file.closest('form').reset()
       alert('Le format du fichier n\'est pas valide. Les formats acceptés sont jpg, jpeg et png.')
