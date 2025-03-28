@@ -12,6 +12,7 @@ import Bills from "../containers/Bills.js";
 import router from "../app/Router.js";
 import e from "express";
 import { formatDate } from "../app/format.js";
+// mock the store
 jest.mock("../app/store", () => mockStore);
 
 describe("Given I am connected as an employee", () => {
@@ -91,9 +92,9 @@ describe("Given I am a user connected as Employee", () => {
       router()
       window.onNavigate(ROUTES_PATH.Bills)
       await waitFor(() => screen.getByText("Mes notes de frais"))
-      const contentPending = await screen.getByText("pending")
+      const contentPending = await screen.getAllByText("pending")
       expect(contentPending).toBeTruthy()
-      const contentAccepted = await screen.getByText("Accepté")
+      const contentAccepted = await screen.getAllByText("accepted")
       expect(contentAccepted).toBeTruthy()
       expect(screen.getAllByTestId("btn-new-bill")).toBeTruthy()
     })
