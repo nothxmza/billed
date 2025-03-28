@@ -19,6 +19,7 @@ const row = (bill) => {
     `)
   }
 
+  // bills sorted by date
 const rows = (data) => {
   if(!data || !data.length) return ""
   data.sort((a, b) => new Date(b.date) - new Date(a.date))
