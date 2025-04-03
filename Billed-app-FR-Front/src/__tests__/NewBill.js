@@ -31,18 +31,18 @@ describe("Given I am connected as an employee", () => {
       const activeIcon = mailIcon.classList.contains('active-icon')
       expect(activeIcon).toBeTruthy()
     })
+
     test("Then, the handleSubmit is called", () => {
       const html = NewBillUI()
       document.body.innerHTML = html
       window.localStorage.setItem('user', JSON.stringify({
         type: 'Employee'
       }))
-
-      const onNavigate = jest.fn()
-      const store = null
-
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+      const store = mockStore
       const newBill = new NewBill({document, onNavigate, store, localStorage: window.localStorage})
-
       const form = screen.getByTestId('form-new-bill')
       const handleSubmit = jest.fn(newBill.handleSubmit)
       form.addEventListener('submit', handleSubmit)
@@ -52,7 +52,7 @@ describe("Given I am connected as an employee", () => {
   })
 })
 
-describe("When I am on NewBill Page", () => {
+describe("When I am on NewBill Page and i try to insert file", () => {
   beforeEach(() => {
     document.body.innerHTML = NewBillUI()
     window.localStorage.setItem('user', JSON.stringify({ type: 'Employee' }))
@@ -65,7 +65,6 @@ describe("When I am on NewBill Page", () => {
       };
     const store = mockStore
     const newBill = new NewBill({document, onNavigate, store, localStorage: window.localStorage})
-
     const file = screen.getByTestId('file')
     const handleChangeFile = jest.fn(newBill.handleChangeFile)
     file.addEventListener('change', handleChangeFile)
@@ -78,23 +77,14 @@ describe("When I am on NewBill Page", () => {
         document.body.innerHTML = ROUTES({ pathname });
       };
     const store = mockStore
-    const newBill = new NewBill({
-      document,
-      onNavigate,
-      store,
-      localStorage: window.localStorage
-    })
-
+    const newBill = new NewBill({document, onNavigate, store, localStorage: window.localStorage})
     const file = screen.getByTestId('file')
     const handleChangeFile = jest.fn(newBill.handleChangeFile)
     file.addEventListener('change', handleChangeFile)
-
     const testFile = new File(['test'], 'test.png', { type: 'image/png' })
     Object.defineProperty(file, 'files', {value: [testFile]})
     Object.defineProperty(file, 'value', {value: 'fakepath-test.png'})
-    
     fireEvent.change(file)
-
     expect(handleChangeFile).toHaveBeenCalled()
     expect(file.files[0].name).toBe('test.png')
     expect(file.value).toBe('fakepath-test.png')
@@ -107,23 +97,14 @@ describe("When I am on NewBill Page", () => {
       document.body.innerHTML = ROUTES({ pathname });
     };
     const store = mockStore
-    const newBill = new NewBill({
-      document,
-      onNavigate,
-      store,
-      localStorage: window.localStorage
-    })
-
+    const newBill = new NewBill({document, onNavigate, store, localStorage: window.localStorage})
     const file = screen.getByTestId('file')
     const handleChangeFile = jest.fn(newBill.handleChangeFile)
     file.addEventListener('change', handleChangeFile)
-
     const testFile = new File(['test'], 'test.txt', { type: 'text/plain' })
     Object.defineProperty(file, 'files', {value: [testFile]})
     Object.defineProperty(file, 'value', {value: 'fakepath-test.txt'})
-    
     fireEvent.change(file)
-
     expect(handleChangeFile).toHaveBeenCalled()
     expect(file.files[0].name).toBe('test.txt')
     expect(file.value).toBe('fakepath-test.txt')

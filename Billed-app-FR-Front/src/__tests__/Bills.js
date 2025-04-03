@@ -5,7 +5,7 @@
 import {screen, waitFor, fireEvent, getByTestId} from "@testing-library/dom"
 import BillsUI from "../views/BillsUI.js"
 import { bills } from "../fixtures/bills.js"
-import { ROUTES_PATH} from "../constants/routes.js";
+import { ROUTES_PATH, ROUTES} from "../constants/routes.js";
 import {localStorageMock} from "../__mocks__/localStorage.js";
 import mockStore from "../__mocks__/store";
 import Bills from "../containers/Bills.js";
@@ -44,8 +44,10 @@ describe("Given I am connected as an employee", () => {
 
     test("Then the New Bill button should be present and clickable", () => {
       document.body.innerHTML = BillsUI({ data: bills })
-      const onNavigate = jest.fn()
-      const store = null
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+      const store = mockStore
       const billsContainer = new Bills({ document, onNavigate, store, localStorage: window.localStorage })
       const handleClickNewBill = jest.fn(billsContainer.handleClickNewBill) //mock the handleClickNewBill function
       const buttonNewBill = screen.getByTestId('btn-new-bill')
@@ -56,8 +58,10 @@ describe("Given I am connected as an employee", () => {
 
     test("Then the modal should open when the eye icon is clicked", async () => {
       document.body.innerHTML = BillsUI({ data: bills })
-      const onNavigate = jest.fn()
-      const store = null
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+      const store = mockStore
       const billsContainer = new Bills({ document, onNavigate, store, localStorage: window.localStorage })
       $.fn.modal = jest.fn() //mock the modal function
       const iconEye = screen.getAllByTestId('icon-eye')[0]
@@ -69,7 +73,9 @@ describe("Given I am connected as an employee", () => {
     })
     
     test("Then the getBills method should return formatted bills", async () => {
-      const onNavigate = jest.fn()
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
       const store = mockStore
       const localStorage = window.localStorage
       const billsContainer = new Bills({ document, onNavigate, store, localStorage })
