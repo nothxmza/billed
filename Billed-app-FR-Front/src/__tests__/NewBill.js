@@ -81,7 +81,7 @@ describe("When I am on NewBill Page and i try to insert file", () => {
     const file = screen.getByTestId('file')
     const handleChangeFile = jest.fn(newBill.handleChangeFile)
     file.addEventListener('change', handleChangeFile)
-    const testFile = new File(['test'], 'test.png', { type: 'image/png' })
+    const testFile = new File(['test'], 'test.png', { type: 'image/png' })//create a new file with the test for content, name test.txt and type text/plain
     Object.defineProperty(file, 'files', {value: [testFile]})
     Object.defineProperty(file, 'value', {value: 'fakepath-test.png'})
     fireEvent.change(file)
@@ -117,26 +117,44 @@ describe("When I am on NewBill Page and i try to insert file", () => {
 describe("Given I am a user connected as Employee", () => {
   describe("When I navigate to NewBill", () => {
     test("Then it should create a new bill from mock API POST", async () => {
-      const postSpy = jest.spyOn(mockStore, "bills")
+      const postSpy = jest.spyOn(mockStore, "bills") //spy on the bills function
       const bill = {
-        "id": "47qAXb6fIm2zOKkLzMro",
-        "vat": "80",
-        "fileUrl": "https://firebasestorage.googleapis.com/v0/b/billable-677b6.a…f-1.jpg?alt=media&token=c1640e12-a24b-4b11-ae52-529112e9602a",
-        "status": "pending",
-        "type": "Hôtel et logement",
-        "commentary": "séminaire billed",
-        "name": "encore",
-        "fileName": "preview-facture-free-201801-pdf-1.jpg",
-        "date": "2004-04-04",
-        "amount": 400,
-        "commentAdmin": "ok",
-        "email": "a@a",
-        "pct": 20
+        vat: "80",
+        fileUrl: "https://firebasestorage.googleapis.com/v0/b/billable-677b6.a…f-1.jpg?alt=media&token=c1640e12-a24b-4b11-ae52-529112e9602a",
+        status: "pending",
+        type: "Hôtel et logement",
+        commentary: "séminaire billed",
+        name: "encore",
+        fileName: "preview-facture-free-201801-pdf-1.jpg",
+        date: "2004-04-05",
+        amount: 400,
+        commentAdmin: "ok",
+        email: "a@a",
+        pct: 20
       }
 
       const postBill = await mockStore.bills().create(bill)
       expect(postSpy).toHaveBeenCalledTimes(1)
       expect(postBill).toBeTruthy()
     })
+
+    test("Then it should fail with 404 error", async () => {
+      mockStore.bills().create = jest.fn().mockRejectedValueOnce(new Error("Erreur 404"))//replace the function create with a mock function that returns a rejected promise
+      try {
+        await mockStore.bills().create()
+      } catch (e) {
+        expect(e).toEqual(new Error("Erreur 404"))
+      }
+    })
+
+    test("Then it should fail with 500 error", async () => {
+      mockStore.bills().create = jest.fn().mockRejectedValueOnce(new Error("Erreur 500"))
+      try {
+        await mockStore.bills().create()
+      } catch (e) {
+        expect(e).toEqual(new Error("Erreur 500"))
+      }
+    })
   })
 })
+

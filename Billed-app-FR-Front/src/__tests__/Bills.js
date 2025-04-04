@@ -91,7 +91,7 @@ describe("Given I am connected as an employee", () => {
 // Test d'intégration GET
 describe("Given I am a user connected as Employee", () => {
   describe("When I navigate to Bills", () => {
-    test("fetches bills from mock API GET", async () => {
+    test("Then fetches bills from mock API GET", async () => {
       localStorage.setItem("user", JSON.stringify({ type: "Employee", email: "a@a" }));
       const root = document.createElement("div")
       root.setAttribute("id", "root")
@@ -123,7 +123,7 @@ describe("Given I am a user connected as Employee", () => {
       router()
     })
 
-    test("fetches bills from an API and fails with 404 message error", async () => {
+    test("Then fetches bills from an API and fails with 404 message error", async () => {
       mockStore.bills.mockImplementationOnce(() => {
         return {
           list: () => {
@@ -137,7 +137,7 @@ describe("Given I am a user connected as Employee", () => {
       expect(message).toBeTruthy()
     })
 
-    test("fetches bills from an API and fails with 500 message error", async () => {
+    test("Then fetches bills from an API and fails with 500 message error", async () => {
       mockStore.bills.mockImplementationOnce(() => {
         return {
           list: () => {
