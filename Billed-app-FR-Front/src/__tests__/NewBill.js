@@ -42,7 +42,8 @@ describe("Given I am connected as an employee", () => {
         document.body.innerHTML = ROUTES({ pathname })
       }
       const store = mockStore
-      const newBill = new NewBill({document, onNavigate, store, localStorage: window.localStorage})
+      const localStorage = window.localStorage
+      const newBill = new NewBill({document, onNavigate, store, localStorage })
       const form = screen.getByTestId('form-new-bill')
       const handleSubmit = jest.fn(newBill.handleSubmit)
       form.addEventListener('submit', handleSubmit)
@@ -64,7 +65,8 @@ describe("When I am on NewBill Page and i try to insert file", () => {
         document.body.innerHTML = ROUTES({ pathname });
       };
     const store = mockStore
-    const newBill = new NewBill({document, onNavigate, store, localStorage: window.localStorage})
+    const localStorage = window.localStorage
+    const newBill = new NewBill({document, onNavigate, store, localStorage })
     const file = screen.getByTestId('file')
     const handleChangeFile = jest.fn(newBill.handleChangeFile)
     file.addEventListener('change', handleChangeFile)
@@ -77,11 +79,12 @@ describe("When I am on NewBill Page and i try to insert file", () => {
         document.body.innerHTML = ROUTES({ pathname });
       };
     const store = mockStore
-    const newBill = new NewBill({document, onNavigate, store, localStorage: window.localStorage})
+    const localStorage = window.localStorage
+    const newBill = new NewBill({document, onNavigate, store, localStorage })
     const file = screen.getByTestId('file')
     const handleChangeFile = jest.fn(newBill.handleChangeFile)
     file.addEventListener('change', handleChangeFile)
-    const testFile = new File(['test'], 'test.png', { type: 'image/png' })//create a new file with the test for content, name test.txt and type text/plain
+    const testFile = new File(['test'], 'test.png', { type: 'image/png' })//create a new file with test for content, name test.png and type image/png
     Object.defineProperty(file, 'files', {value: [testFile]})
     Object.defineProperty(file, 'value', {value: 'fakepath-test.png'})
     fireEvent.change(file)
@@ -97,7 +100,8 @@ describe("When I am on NewBill Page and i try to insert file", () => {
       document.body.innerHTML = ROUTES({ pathname });
     };
     const store = mockStore
-    const newBill = new NewBill({document, onNavigate, store, localStorage: window.localStorage})
+    const localStorage = window.localStorage
+    const newBill = new NewBill({document, onNavigate, store, localStorage })
     const file = screen.getByTestId('file')
     const handleChangeFile = jest.fn(newBill.handleChangeFile)
     file.addEventListener('change', handleChangeFile)
