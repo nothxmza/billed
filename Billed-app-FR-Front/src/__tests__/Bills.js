@@ -48,7 +48,8 @@ describe("Given I am connected as an employee", () => {
         document.body.innerHTML = ROUTES({ pathname })
       }
       const store = mockStore
-      const billsContainer = new Bills({ document, onNavigate, store, localStorage: window.localStorage })
+      const localStorage = window.localStorage
+      const billsContainer = new Bills({ document, onNavigate, store, localStorage })
       const handleClickNewBill = jest.fn(billsContainer.handleClickNewBill) //mock the handleClickNewBill function
       const buttonNewBill = screen.getByTestId('btn-new-bill')
       buttonNewBill.addEventListener('click', handleClickNewBill)
@@ -62,7 +63,8 @@ describe("Given I am connected as an employee", () => {
         document.body.innerHTML = ROUTES({ pathname })
       }
       const store = mockStore
-      const billsContainer = new Bills({ document, onNavigate, store, localStorage: window.localStorage })
+      const localStorage = window.localStorage
+      const billsContainer = new Bills({ document, onNavigate, store, localStorage })
       $.fn.modal = jest.fn() //mock the modal function
       const iconEye = screen.getAllByTestId('icon-eye')[0]
       const handleClickIconEye = jest.fn(() => billsContainer.handleClickIconEye(iconEye))
