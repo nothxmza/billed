@@ -105,7 +105,8 @@ describe("Given I am a user connected as Employee", () => {
       expect(contentPending).toBeTruthy()
       const contentAccepted = await screen.getAllByText("accepted")
       expect(contentAccepted).toBeTruthy()
-      expect(screen.getAllByTestId("btn-new-bill")).toBeTruthy()
+      const contentRefused = await screen.getAllByText("refused")
+      expect(contentRefused).toBeTruthy()
     })
 	describe("When an error occurs on API", () => {
     beforeEach(() => {
